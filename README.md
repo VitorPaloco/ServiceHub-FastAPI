@@ -1,12 +1,5 @@
-# WebService - Integração Corporativa com FastAPI
-
-WebService desenvolvido com FastAPI para integração entre ambientes corporativos, automatizando processos de geração de relatórios e cargas de dados via API.
-
-O projeto foi estruturado seguindo boas práticas do ecossistema FastAPI, utilizando separação por camadas, organização modular e configuração baseada em ambiente.
-
----
-
-# Objetivo
+## ⚙️ ServiceHub - Integração Corporativa com FastAPI
+WebService desenvolvido com FastAPI para integração automatizar processos de geração de relatórios e cargas de dados via API.
 
 O WebService atua como uma camada intermediária responsável por:
 
@@ -16,212 +9,108 @@ O WebService atua como uma camada intermediária responsável por:
 - Gerar novos payloads JSON;
 - Integrar com outros ambientes e sistemas corporativos via API.
 
----
+<br>
 
-# Funcionalidades
+> O projeto foi estruturado seguindo boas práticas do ecossistema FastAPI, utilizando separação por camadas, organização modular e configuração baseada em ambiente.
 
-## Relatórios
+<br>
 
-O módulo de relatórios recebe um JSON contendo parâmetros e queries utilizadas para coleta de dados em banco.
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi&logoColor=white"/> 
 
-Após o processamento:
-
-1. Os dados são consultados;
-2. Um novo JSON estruturado é gerado;
-3. Esse payload é enviado para um ambiente isolado responsável pela geração de relatórios.
-
-### Fluxo
-
-```text
-Sistema Interno
-    ↓
-WebService FastAPI
-    ↓
-Banco de Dados
-    ↓
-Transformação dos Dados
-    ↓
-Ambiente Gerador de Relatórios
-````
-
----
-
-## Carga de Dados
-
-O módulo de carga segue um fluxo semelhante ao módulo de relatórios.
-
-Após a geração do JSON:
-
-1. Os dados são processados;
-2. O payload é estruturado;
-3. O WebService realiza integrações via API para efetuar cargas em sistemas corporativos.
-
-### Fluxo
-
-```text
-Sistema Interno
-    ↓
-WebService FastAPI
-    ↓
-Banco de Dados
-    ↓
-Transformação dos Dados
-    ↓
-API do Sistema de Destino
-```
-
----
-
-# Estrutura do Projeto
-
-A estrutura foi organizada seguindo padrões recomendados pelo FastAPI para facilitar manutenção, escalabilidade e separação de responsabilidades.
+## 📂 Project Structure
 
 ```bash
-app/
-├── api/
-│   ├── routes/
-│   │   ├── reports.py
-│   │   └── loads.py
-│   └── dependencies.py
-│
-├── core/
-│   ├── config.py
-│   ├── security.py
-│   └── database.py
-│
-├── schemas/
-│   ├── report_schema.py
-│   └── load_schema.py
-│
-├── services/
-│   ├── report_service.py
-│   └── load_service.py
-│
-├── integrations/
-│   ├── report_api.py
-│   └── external_system_api.py
-│
-├── utils/
-│   ├── logger.py
-│   └── helpers.py
-│
-├── main.py
-└── __init__.py
+├── .venv/
+├── app/
+│   ├── core/
+│   │   ├── config.py
+│   │   └── logger.py
+│   │
+│   ├── schemas/
+│   │   ├── carga.py
+│   │   └── relatorio.py
+│   │
+│   ├── services/
+│   │   ├── api_service.py
+│   │   └── query_service.py
+│   │
+│   ├── main.py
+│   └── router.py
+├── logs/
+└── .env
 ```
 
----
+## 🔗 Instalação
 
-# Tecnologias Utilizadas
+Clone este repositório
+```bash
+git clone https://github.com/VitorPaloco/ServiceHub-FastAPI.git
 
-* FastAPI
-* Python
-* Uvicorn
-* Pydantic
-* Requests / HTTPX
-* SQLAlchemy
-* PostgreSQL / Oracle / SQL Server
-
----
-
-# Exemplo de Requisição
-
-## Endpoint - Relatórios
-
-```http
-POST /reports/generate
+cd ServiceHub-FastAPI
 ```
 
-### Body
+Crie seu ambiente virtual
+```bash
+# Linux / MacOS
+python -m venv .venv
+source .venv/bin/activate
 
-```json
-{
-  "report_name": "sales_report",
-  "queries": [
-    {
-      "name": "sales",
-      "query": "SELECT * FROM sales WHERE date >= CURRENT_DATE"
-    }
-  ],
-  "parameters": {
-    "company": "COMPANY_A",
-    "environment": "production"
-  }
-}
+# Windows
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
----
-
-## Endpoint - Carga
-
-```http
-POST /loads/execute
+Instalando dependências
+```bash
+pip install -r requirements.txt
 ```
 
-### Body
-
-```json
-{
-  "integration": "customer_sync",
-  "queries": [
-    {
-      "name": "customers",
-      "query": "SELECT * FROM customers WHERE active = 1"
-    }
-  ],
-  "destination": {
-    "system": "ERP",
-    "module": "customers"
-  }
-}
+Gere seu arquivo .env e preencha com os dados dos seus Bancos de Dados e APIs
+```bash
+cp .env.example .env
 ```
 
----
+```env
+# ==================================================
+# APPLICATION
+# ==================================================
 
-# Padrões Utilizados
+# Internal application token
+AUTHORIZED_TOKEN=your_authorized_token_here
 
-* Arquitetura modular
-* Separação por camadas
-* Uso de Schemas com Pydantic
-* Configuração via `.env`
-* Serviços desacoplados
-* Integrações isoladas
-* Reutilização de código
-* Tipagem com Python
-* Estrutura preparada para escalabilidade
+# ==================================================
+# DATABASE CONNECTIONS
+# ==================================================
+# Supported types:
+# mysql | postgres | sqlserver | hana
+# ==================================================
 
----
+# DATABASE 001
+DB_001_TYPE=
+DB_001_HOST=
+DB_001_PORT=
+DB_001_DATABASE=
+DB_001_USER=
+DB_001_PASSWORD=
 
-# Segurança
+# ==================================================
+# API INTEGRATIONS
+# ==================================================
+# AUTH TYPES:
+# bearer -> Fixed bearer token
+# login -> Authentication endpoint required
+# ==================================================
 
-As credenciais de banco de dados e APIs externas são armazenadas em variáveis de ambiente através de arquivo `.env`.
+# API 001 - Bearer Example
+API_001_BASE_URL=http://localhost:8001/
+API_001_HEADERS={"Authorization":"Bearer your_token_here","Content-Type":"application/json"}
 
-Por segurança, o arquivo `.env` não é versionado no repositório.
-
----
-
-# Instalação
-
-As instruções completas de instalação e configuração estão disponíveis em:
-
-```text
-INSTALL.md
+# API 002 - Login Example
+API_002_BASE_URL=
+API_002_AUTH_TYPE=login
+API_002_AUTH_URL=Login
+API_002_AUTH_METHOD=POST
+API_002_AUTH_BODY={}
+API_002_TOKEN_PATH=SessionId
+API_002_HEADERS={"Authorization":"","Content-Type":"application/json"}
 ```
-
----
-
-# Melhorias Futuras
-
-* Sistema de filas
-* Retry automático
-* Logs centralizados
-* Observabilidade
-* Cache de consultas
-* Autenticação JWT
-* Documentação OpenAPI customizada
-* Testes automatizados
-
----
-
-# Autor
-
-Desenvolvido para uso interno corporativo utilizando FastAPI como framework principal.
